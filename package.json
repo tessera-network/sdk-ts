@@ -1,5 +1,5 @@
 {
-  "name": "@tessera/sdk",
+  "name": "@tessera-network/sdk",
   "version": "0.1.0",
   "description": "Official TypeScript SDK for Tessera Network",
   "type": "module",
