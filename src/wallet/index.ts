@@ -277,6 +277,7 @@ export class Wallet {
       amount,
       payload: params.payload,
       nonce,
+      chainId: this.chainId, // Always use wallet's chainId
     });
 
     const receipt = await client.submitTransaction(transactionToJson(tx));
@@ -298,6 +299,7 @@ export class Wallet {
     const tx = this.txBuilder.signStake({
       amount,
       nonce,
+      chainId: this.chainId,
     });
 
     const receipt = await client.submitTransaction(transactionToJson(tx));
@@ -319,6 +321,7 @@ export class Wallet {
     const tx = this.txBuilder.signUnstake({
       amount,
       nonce,
+      chainId: this.chainId,
     });
 
     const receipt = await client.submitTransaction(transactionToJson(tx));
@@ -343,6 +346,7 @@ export class Wallet {
       changes: params.changes,
       deposit,
       nonce,
+      chainId: this.chainId,
     });
 
     const receipt = await client.submitTransaction(transactionToJson(tx));
@@ -377,6 +381,7 @@ export class Wallet {
       proposalId,
       option,
       nonce,
+      chainId: this.chainId,
     });
 
     const receipt = await client.submitTransaction(transactionToJson(tx));
@@ -391,7 +396,7 @@ export class Wallet {
   /**
    * Sign a transfer transaction without submitting
    */
-  async signTransfer(params: TransferParams & { nonce?: bigint }) {
+  async signTransfer(params: TransferParams & { nonce?: bigint; chainId?: string }) {
     const nonce = params.nonce ?? (await this.getNonce()) + 1n;
 
     const amount = typeof params.amount === 'string'
@@ -403,6 +408,7 @@ export class Wallet {
       amount,
       payload: params.payload,
       nonce,
+      chainId: params.chainId ?? this.chainId, // Use explicit chainId or wallet's default
     });
 
     return transactionToJson(tx);

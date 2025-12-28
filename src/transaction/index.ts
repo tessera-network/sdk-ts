@@ -288,8 +288,8 @@ export class TransactionBuilder {
 export function serializeForSigning(tx: Transaction): Uint8Array {
   const parts: Uint8Array[] = [];
 
-  // tx_type (1 byte)
-  parts.push(new Uint8Array([tx.txType]));
+  // tx_type (u32 in bincode format, little-endian)
+  parts.push(encodeU32(tx.txType));
 
   // chain_id (length-prefixed string)
   const chainIdBytes = new TextEncoder().encode(tx.chainId);
@@ -338,6 +338,13 @@ export function serializeForSigning(tx: Transaction): Uint8Array {
 /**
  * Encode a u64 as little-endian bytes
  */
+function encodeU32(value: number): Uint8Array {
+  const buffer = new ArrayBuffer(4);
+  const view = new DataView(buffer);
+  view.setUint32(0, value, true); // little-endian
+  return new Uint8Array(buffer);
+}
+
 function encodeU64(value: bigint): Uint8Array {
   const buffer = new ArrayBuffer(8);
   const view = new DataView(buffer);

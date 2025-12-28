@@ -186,10 +186,27 @@ export interface VotePayload {
 // ============================================================================
 
 /**
+ * Network identity (computed from genesis configuration)
+ * Used for network isolation and replay attack protection
+ */
+export interface NetworkIdentity {
+  /** Human-readable network name (e.g., "tessera-devnet") */
+  chainId: string;
+  /** Unique network identifier hash (first 16 hex chars) */
+  networkId: string;
+  /** Genesis block/config hash (first 16 hex chars) */
+  genesisHash: string;
+  /** Network creation timestamp (Unix seconds) */
+  genesisTime: bigint;
+}
+
+/**
  * Network status information
  */
 export interface NetworkStatus {
   chainId: string;
+  networkId: string;
+  genesisHash: string;
   blockHeight: bigint;
   blockTime: bigint;
   peerCount: number;

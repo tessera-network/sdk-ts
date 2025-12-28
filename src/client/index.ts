@@ -5,6 +5,7 @@
 import {
   Account,
   Block,
+  NetworkIdentity,
   NetworkStatus,
   TransactionJson,
   TransactionReceipt,
@@ -178,14 +179,39 @@ export class TesseraClient {
       mempool_size: number;
       total_transactions: number;
       state_root: string;
+      chain_id?: string;
+      network_id?: string;
+      genesis_hash?: string;
     }>('/network_status');
 
     return {
-      chainId: 'tessera-devnet-1', // TODO: get from chain_params
+      chainId: response.chain_id ?? 'unknown',
+      networkId: response.network_id ?? '',
+      genesisHash: response.genesis_hash ?? '',
       blockHeight: BigInt(response.current_height),
       blockTime: BigInt(Math.floor(Date.now() / 1000)), // Not provided by API
       peerCount: 0, // Not provided by this endpoint
       isSyncing: false, // Not provided by this endpoint
+    };
+  }
+
+  /**
+   * Get network identity (chain_id, network_id, genesis_hash)
+   * Used for verifying connection to correct network
+   */
+  async getNetworkIdentity(): Promise<NetworkIdentity> {
+    const response = await this.get<{
+      chain_id: string;
+      network_id: string;
+      genesis_hash: string;
+      genesis_time: number;
+    }>('/network_identity');
+
+    return {
+      chainId: response.chain_id,
+      networkId: response.network_id,
+      genesisHash: response.genesis_hash,
+      genesisTime: BigInt(response.genesis_time),
     };
   }
 

@@ -13,6 +13,7 @@ export {
   jsonToTransaction,
   calculateFee,
   calculateHash,
+  serializeForSigning,
   type TransferOptions,
   type StakeOptions,
   type UnstakeOptions,
